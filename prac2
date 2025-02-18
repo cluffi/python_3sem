@@ -1,0 +1,223 @@
+import timeit
+from Levenshtein import distance
+
+
+def levenshtein(a, b, i, j):
+    if i == 0:
+        return j
+    if j == 0:
+        return i
+    if a[i - 1] == b[j - 1]:
+        return levenshtein(a, b, i - 1, j - 1)
+    return 1 + min(
+        levenshtein(a, b, i - 1, j),
+        levenshtein(a, b, i, j - 1),
+        levenshtein(a, b, i - 1, j - 1)
+    )
+
+def levenshtein_iterative(a, b):
+    m, n = len(a), len(b)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for i in range(m + 1):
+        for j in range(n + 1):
+            if i == 0:
+                dp[i][j] = j
+            elif j == 0:
+                dp[i][j] = i
+            elif a[i - 1] == b[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = 1 + min(dp[i - 1][j], dp[i]
+                                   [j - 1], dp[i - 1][j - 1])
+
+    return dp[m][n]
+
+
+strings = [
+    ("Hello, world!", "Goodbye, world!"),
+    ("100101", "100011"),
+    ("Hello, world!", "Bye, world!"),
+    ("I love Python", "I like Python"),
+
+
+]
+for string in strings:
+    a, b = string
+    print(
+        f"Расстояние Левенштейна между '{a}' и '{b}': {levenshtein(a, b, len(a), len(b))}")
+
+
+
+print("\n\nВремя рекурсивной версии:")
+for a, b in strings:
+    print(f"{a} и {b}: {timeit.timeit(lambda: levenshtein(a, b, len(a), len(b)), number=10)} секунд")
+
+
+print("\nВремя итеративной версии:")
+for a, b in strings:
+    print(f"{a} и {b}: {timeit.timeit(lambda: levenshtein_iterative(a, b), number=10)} секунд")
+
+
+print("\nВремя python-Levenshtein:")
+for a, b in strings:
+    print(f"{a} и {b}: {timeit.timeit(lambda: distance(a, b), number=10)} секунд")
+
+words = ["language!", "programming", "Python", "the", "love", "I"]
+
+sx =''
+for i in range(len(words)-1, -1, -1):
+    sx += (''.join(words[i]))
+    if i!=0:
+        sx+=' '
+
+
+def f(s, c):
+    count = 0
+    target = c.lower()
+    for char in s:
+        if char.lower() == target:
+            count += 1
+    return count
+
+
+def count_characters(s):
+    result = {}
+    s = s.replace(" ", "").lower()
+
+    for char in s:
+        if char not in result:
+            result[char] = f(s, char)
+
+    return result
+
+s = count_characters(sx)
+print("Результат:", s)
+
+words = ["language!", "programming", "Python", "the", "love", "I"]
+
+s =''
+for i in range(len(words)-1, -1, -1):
+    s += (''.join(words[i]))
+    if i!=0:
+        s+=' '
+print(s)
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def _2(y, z):
+    return np.sqrt(np.sum((np.array(y) - np.array(z)) ** 2))
+
+
+def _3(y, z):
+    return np.sum(np.abs(np.array(y) - np.array(z)))
+
+
+def _4(y, z):
+    s = 0
+    for yi, zi in zip(y, z):
+        f = abs(yi - zi)
+        if s < f:
+            s = f
+    return s
+
+
+def _5(y, z):
+    return np.sum((np.array(y) - np.array(z)) ** 2)
+
+
+def _6(y, z, h=5):
+    return np.sum(np.abs(np.array(y) - np.array(z)) ** h) ** (1 / h)
+
+
+def visualize(distance_metrics, y, z, move=1):
+    moved_z = [i + move for i in z]
+    distance_differences = []
+    for distance in distance_metrics:
+        distance_before_move = distance(y, z)
+        distance_after_move = distance(y, moved_z)
+        distance_difference = distance_after_move - distance_before_move
+        distance_differences.append(distance_difference)
+    x = range(0, len(distance_differences))
+    figure, axis = plt.subplots()
+
+    # Построение гистограммы с подписями
+    axis.bar(x, distance_differences)
+    axis.set_xticks(x, labels=[f'd_{i + 1}' for i in x])
+    plt.show()
+
+
+y = (1, 0.5, 1)
+z = (0.5, 2, 1)
+distance_metrics = [_2, _3, _4, _5, _6]
+
+for move in [1, 0.01, 1.5]:
+    print(f"move = {move}:")
+    visualize(distance_metrics, y, z, move)
+
+import numpy as np
+
+def _6(y, z, h=5):
+    return np.sum(np.abs(np.array(y) - np.array(z)) ** h) ** (1 / h)
+
+y = (1, 0.5, 1)
+z = (0.5, 2, 1)
+print(_6(y, z))
+
+import numpy as np
+
+def _5(y, z):
+    return np.sum((np.array(y) - np.array(z)) ** 2)
+
+y = (1, 0.5, 1)
+z = (0.5, 2, 1)
+print(_5(y, z))
+
+def _4(y, z):
+    s = 0
+    for yi, zi in zip(y, z):
+        f = abs(yi - zi)
+        if s < f:
+            s = f
+    return s
+
+y = (1, 0.5, 1)
+z = (0.5, 2, 1)
+print(_4(y, z))
+
+import numpy as np
+
+def _3(y, z):
+    return np.sum(np.abs(np.array(y) - np.array(z)))
+
+y = (1, 0.5, 1)
+z = (0.5, 2, 1)
+print(_3(y, z))
+
+import numpy as np
+
+def _2(y, z):
+    return np.sqrt(np.sum((np.array(y) - np.array(z)) ** 2))
+
+y = (1, 0.5, 1)
+z = (0.5, 2, 1)
+print(_2(y,z))
+
+import math
+
+def _1(n, m, a):
+    result = 1
+    for i in range(1, a + 1):
+        for j in range(1, m + 1):
+            sum_temp = 0
+            for t in range(1, n + 1):
+                temp =((28 * i ** 2) ** 6) / 5 + 16 * ((j ** 3 / 44) + t ** 2) ** 5
+                sum_temp += temp
+            result *= sum_temp
+    return result
+
+
+f_value = _1(4, 2, 8)
+print(f_value)
